@@ -12,7 +12,7 @@ struct ShecanApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(width: 320, height: 500)
+                .frame(width: 320, height: 520)
                 .colorScheme(.dark)
         }
         

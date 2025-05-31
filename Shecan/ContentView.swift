@@ -30,8 +30,9 @@ struct ContentView: View {
             
             VStack(spacing: 5) {
                 VStack(spacing: 1) {
-                    Image(systemName: "network")
-                        .font(.system(size: 50))
+                    Image(.shecan)
+                        .resizable()
+                        .frame(width: 50, height: 50)
                         .foregroundColor(.white)
                     
                     Text("shecan")
@@ -53,7 +54,7 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                         }
                     }
-                    .padding(.trailing, 50)
+                    .padding(.trailing, 80)
                     .pickerStyle(MenuPickerStyle())
                     .cornerRadius(8)
                 }
@@ -106,6 +107,7 @@ struct ContentView: View {
                             Text(server)
                                 .font(.system(.body, design: .monospaced))
                                 .foregroundColor(.white.opacity(0.9))
+                                .textSelection(.enabled)
                             
                             Spacer()
                             
@@ -119,6 +121,20 @@ struct ContentView: View {
                     .cornerRadius(10)
                     
                     Spacer()
+                    HStack(spacing: 5) {
+                        Text("[Powered by Shecan](https://shecan.ir)")
+                            .font(.system(.footnote, design: .monospaced))
+                           
+                        
+                        Image(.shecan)
+                            .resizable()
+                            .frame(width: 10, height: 10)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    
+                    Text("[Developed by Morteza](https://github.com/Mor4eza)")
+                        .font(.system(.subheadline, design: .monospaced))
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
@@ -182,7 +198,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
 
 #Preview {
     ContentView()
-        .frame(width: 320, height: 500)
+        .frame(width: 320, height: 520)
         
 //        .environment(\.locale, .init(identifier: "fa"))
 //        .environment(\.layoutDirection, .rightToLeft )

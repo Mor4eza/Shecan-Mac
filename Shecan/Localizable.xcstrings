@@ -4,11 +4,17 @@
     "" : {
       "shouldTranslate" : false
     },
+    "[Developed by Morteza](https://github.com/Mor4eza)" : {
+      "shouldTranslate" : false
+    },
+    "[Powered by Shecan](https://shecan.ir)" : {
+      "shouldTranslate" : false
+    },
     "🇮🇷" : {
-
+      "shouldTranslate" : false
     },
     "🇺🇸" : {
-
+      "shouldTranslate" : false
     },
     "Disable shecan" : {
       "extractionState" : "manual",
@@ -265,6 +271,12 @@
     "Testing..." : {
       "extractionState" : "manual",
       "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testing…"
+          }
+        },
         "fa" : {
           "stringUnit" : {
             "state" : "translated",
