@@ -13,12 +13,54 @@ class DNSManager: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-    @Published var pingTimes: [String: String] = [:] // Store ping times in ms
+    @Published var pingTimes: [String: String] = [:]
+    @Published var networkAdapters: [String] = []
+    @Published var selectedAdapter: String = "Wi-Fi" {
+        didSet {
+            checkDNSStatus()
+        }
+    }
     
     let dnsServers = ["178.22.122.100", "185.51.200.2"]
     
     init() {
+        fetchNetworkAdapters()
         checkDNSStatus()
+    }
+    
+    func fetchNetworkAdapters() {
+        DispatchQueue.global(qos: .background).async {
+            let process = Process()
+            let pipe = Pipe()
+            
+            process.launchPath = "/usr/sbin/networksetup"
+            process.arguments = ["-listallnetworkservices"]
+            process.standardOutput = pipe
+            process.standardError = pipe
+            
+            do {
+                try process.run()
+                process.waitUntilExit()
+                
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                let output = String(data: data, encoding: .utf8) ?? ""
+                let adapters = output.components(separatedBy: "\n")
+                    .filter { !$0.isEmpty && !$0.contains("An asterisk (*)") }
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                
+                DispatchQueue.main.async {
+                    self.networkAdapters = adapters
+                    if !adapters.isEmpty && !adapters.contains(self.selectedAdapter) {
+                        self.selectedAdapter = adapters[0]
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.alertMessage = "Failed to fetch network adapters"
+                    self.showAlert = true
+                }
+            }
+        }
     }
     
     func pingDNSServers() {
@@ -37,7 +79,7 @@ class DNSManager: ObservableObject {
         let pipe = Pipe()
         
         process.launchPath = "/sbin/ping"
-        process.arguments = ["-c", "3", host] // Send 3 packets
+        process.arguments = ["-c", "3", host]
         process.standardOutput = pipe
         process.standardError = pipe
         
@@ -84,9 +126,9 @@ class DNSManager: ObservableObject {
             
             let command: String
             if shouldEnable {
-                command = "networksetup -setdnsservers Wi-Fi \(self.dnsServers.joined(separator: " "))"
+                command = "networksetup -setdnsservers \(self.selectedAdapter) \(self.dnsServers.joined(separator: " "))"
             } else {
-                command = "networksetup -setdnsservers Wi-Fi empty"
+                command = "networksetup -setdnsservers \(self.selectedAdapter) empty"
             }
             
             let process = Process()
@@ -125,7 +167,7 @@ class DNSManager: ObservableObject {
         let pipe = Pipe()
         
         process.launchPath = "/usr/sbin/networksetup"
-        process.arguments = ["-getdnsservers", "Wi-Fi"]
+        process.arguments = ["-getdnsservers", selectedAdapter]
         process.standardOutput = pipe
         process.standardError = pipe
         

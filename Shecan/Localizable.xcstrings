@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+      "shouldTranslate" : false
+    },
     "Disable shecan" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -86,6 +89,23 @@
         }
       }
     },
+    "Error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خطا"
+          }
+        }
+      }
+    },
     "Failed to set DNS settings" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -99,6 +119,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "فعالسازی شکن موفقیت آمیز نبود"
+          }
+        }
+      }
+    },
+    "Interface:" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interface:"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "انتخاب شبکه:"
           }
         }
       }
@@ -171,6 +207,22 @@
         }
       }
     },
+    "shecan is Active on %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "shecan is Active on %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شکن بر روی %@ فعال است"
+          }
+        }
+      }
+    },
     "shecan is Inactive" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -184,6 +236,33 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "شکن غیرفعال است"
+          }
+        }
+      }
+    },
+    "shecan is Inactive on %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "shecan is Inactive on %@"
+          }
+        },
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شکن بر روی %@ غیرفعال است"
+          }
+        }
+      }
+    },
+    "Testing..." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "fa" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "در حال بررسی…"
           }
         }
       }

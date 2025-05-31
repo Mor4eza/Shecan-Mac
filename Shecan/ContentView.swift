@@ -12,15 +12,12 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
             LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]),
-                           startPoint: .topLeading,
-                           endPoint: .bottomTrailing)
-            .edgesIgnoringSafeArea(.all)
+                         startPoint: .topLeading,
+                         endPoint: .bottomTrailing)
+                .edgesIgnoringSafeArea(.all)
             
-            // Main content
             VStack(spacing: 5) {
-                // Header
                 VStack(spacing: 1) {
                     Image(systemName: "network")
                         .font(.system(size: 50))
@@ -30,13 +27,31 @@ struct ContentView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
-                    
                 }
                 .padding([.top, .bottom], 30)
                 
+                
+                // Network Adapter Picker
+                HStack {
+                    Text("Interface:")
+                        .foregroundColor(.white)
+                    
+                    Picker("", selection: $dnsManager.selectedAdapter) {
+                        ForEach(dnsManager.networkAdapters, id: \.self) { adapter in
+                            Text(adapter).tag(adapter)
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(width: 200)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .cornerRadius(8)
+                }
+                .padding()
+                
                 Spacer()
                 
-                // Toggle Button
                 Button(action: {
                     dnsManager.toggleDNS()
                 }) {
@@ -49,7 +64,6 @@ struct ContentView: View {
                             .resizable()
                             .frame(width: 50, height: 50)
                             .padding()
-                        
                     }
                 }
                 .buttonStyle(NeumorphicButtonStyle(isActive: dnsManager.isDNSEnabled))
@@ -58,7 +72,6 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                // Status indicator
                 HStack {
                     Circle()
                         .fill(dnsManager.isDNSEnabled ? Color.green : Color.gray)
@@ -66,15 +79,14 @@ struct ContentView: View {
                         .shadow(color: dnsManager.isDNSEnabled ? Color.green.opacity(0.5) : Color.gray.opacity(0.5),
                                 radius: 4, x: 0, y: 0)
                     
-                    Text(dnsManager.isDNSEnabled ? "shecan is Active" : "shecan is Inactive")
+                    Text(dnsManager.isDNSEnabled ?
+                         "shecan is Active on \(dnsManager.selectedAdapter)" :
+                         "shecan is Inactive on \(dnsManager.selectedAdapter)")
                         .font(.subheadline)
                         .foregroundColor(.white)
                 }
                 .padding([.bottom, .top], 15)
                 
-                //
-                
-                //start DNS Servers Info
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Shecan DNS Servers:")
                         .font(.headline)
@@ -107,13 +119,9 @@ struct ContentView: View {
             } message: {
                 Text(dnsManager.alertMessage)
             }
-            .onAppear {
-                dnsManager.checkDNSStatus()
-            }
         }
-        
-        
     }
+    
     private func pingTimeColor(_ time: String?) -> Color {
         guard let time = time else { return .white }
         
@@ -130,6 +138,7 @@ struct ContentView: View {
         return .white
     }
 }
+
 struct NeumorphicButtonStyle: ButtonStyle {
     var isActive: Bool
     
