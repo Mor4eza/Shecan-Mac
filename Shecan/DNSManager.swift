@@ -5,18 +5,62 @@
 //  Created by Morteza on 5/31/25.
 //
 
-import Foundation
+import SwiftUI
+import Combine
 
 class DNSManager: ObservableObject {
     @Published var isDNSEnabled: Bool = false
     @Published var isLoading: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    @Published var pingTimes: [String: String] = [:] // Store ping times in ms
     
     let dnsServers = ["178.22.122.100", "185.51.200.2"]
     
     init() {
         checkDNSStatus()
+    }
+    
+    func pingDNSServers() {
+        for server in dnsServers {
+            DispatchQueue.global(qos: .utility).async {
+                let time = self.getPingTime(host: server)
+                DispatchQueue.main.async {
+                    self.pingTimes[server] = time
+                }
+            }
+        }
+    }
+    
+    private func getPingTime(host: String) -> String {
+        let process = Process()
+        let pipe = Pipe()
+        
+        process.launchPath = "/sbin/ping"
+        process.arguments = ["-c", "3", host] // Send 3 packets
+        process.standardOutput = pipe
+        process.standardError = pipe
+        
+        do {
+            try process.run()
+            process.waitUntilExit()
+            
+            let data = pipe.fileHandleForReading.readDataToEndOfFile()
+            guard let output = String(data: data, encoding: .utf8) else { return "N/A" }
+            
+            // Parse the average ping time
+            if let range = output.range(of: "min/avg/max/stddev = ") {
+                let remaining = output[range.upperBound...]
+                let components = remaining.components(separatedBy: "/")
+                if components.count >= 2 {
+                    let avgTime = components[1]
+                    return "\(avgTime) ms"
+                }
+            }
+            return "Timeout"
+        } catch {
+            return "Error"
+        }
     }
     
     func checkDNSStatus() {
@@ -27,6 +71,7 @@ class DNSManager: ObservableObject {
             DispatchQueue.main.async {
                 self.isDNSEnabled = currentDNS == self.dnsServers
                 self.isLoading = false
+                self.pingDNSServers()
             }
         }
     }
@@ -58,9 +103,11 @@ class DNSManager: ObservableObject {
                         self.isDNSEnabled = shouldEnable
                         self.alertMessage = shouldEnable ? "DNS enabled successfully!" : "DNS disabled successfully!"
                         self.showAlert = false
+                        self.pingDNSServers()
                     } else {
                         self.alertMessage = "Failed to update DNS settings"
                         self.showAlert = true
+                        
                     }
                 }
             } catch {

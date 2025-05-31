@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View{
+struct ContentView: View {
     @StateObject private var dnsManager = DNSManager()
     
     var body: some View {
@@ -81,30 +81,55 @@ struct ContentView: View{
                         .foregroundColor(.white)
                     
                     ForEach(dnsManager.dnsServers, id: \.self) { server in
-                        Text(server)
-                            .font(.system(.body, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.9))
+                        HStack {
+                            Text(server)
+                                .font(.system(.body, design: .monospaced))
+                                .foregroundColor(.white.opacity(0.9))
+                            
+                            Spacer()
+                            
+                            Text(dnsManager.pingTimes[server] ?? "Testing...")
+                                .font(.system(.subheadline, design: .monospaced))
+                                .foregroundColor(self.pingTimeColor(dnsManager.pingTimes[server]))
+                        }
                     }
+                    .padding()
+                    .background(Color.black.opacity(0.2))
+                    .cornerRadius(10)
+                    
+                    Spacer()
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
-                .background(Color.black.opacity(0.2))
-                .cornerRadius(10)
-                
-                Spacer()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .alert("DNS Status", isPresented: $dnsManager.showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(dnsManager.alertMessage)
+            }
+            .onAppear {
+                dnsManager.checkDNSStatus()
+            }
         }
-        .alert("DNS Status", isPresented: $dnsManager.showAlert) {
-            Button("OK", role: .cancel) { }
-        } message: {
-            Text(dnsManager.alertMessage)
+        
+        
+    }
+    private func pingTimeColor(_ time: String?) -> Color {
+        guard let time = time else { return .white }
+        
+        if time.contains("N/A") || time.contains("Error") || time.contains("Timeout") {
+            return .red
         }
-        .onAppear {
-            dnsManager.checkDNSStatus()
+        
+        if let msValue = Double(time.replacingOccurrences(of: " ms", with: "")) {
+            if msValue < 50 { return .green }
+            if msValue < 100 { return .yellow }
+            return .orange
         }
+        
+        return .white
     }
 }
-
 struct NeumorphicButtonStyle: ButtonStyle {
     var isActive: Bool
     
