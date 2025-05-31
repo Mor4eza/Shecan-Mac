@@ -23,6 +23,18 @@ class DNSManager: ObservableObject {
     
     let dnsServers = ["178.22.122.100", "185.51.200.2"]
     
+    @Published var currentLocale: Locale = .english {
+          didSet {
+              // Update app's locale when changed
+              UserDefaults.standard.set([currentLocale.identifier], forKey: "AppleLanguages")
+              UserDefaults.standard.synchronize()
+          }
+      }
+      
+      // Supported languages
+      let supportedLocales: [Locale] = [.english, .persian]
+      
+    
     init() {
         fetchNetworkAdapters()
         checkDNSStatus()

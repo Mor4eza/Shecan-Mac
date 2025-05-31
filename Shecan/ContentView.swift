@@ -16,6 +16,17 @@ struct ContentView: View {
                          startPoint: .topLeading,
                          endPoint: .bottomTrailing)
                 .edgesIgnoringSafeArea(.all)
+           
+            Button(dnsManager.currentLocale == .english ? "🇮🇷" : "🇺🇸", action: {
+                if dnsManager.currentLocale == .english {
+                    dnsManager.currentLocale = .persian
+                } else {
+                    dnsManager.currentLocale = .english
+                }
+            })
+            .toggleStyle(.button)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding()
             
             VStack(spacing: 5) {
                 VStack(spacing: 1) {
@@ -28,7 +39,7 @@ struct ContentView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                 }
-                .padding([.top, .bottom], 30)
+                .padding([.top, .bottom], 15)
                 
                 
                 // Network Adapter Picker
@@ -42,10 +53,8 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                         }
                     }
+                    .padding(.trailing, 50)
                     .pickerStyle(MenuPickerStyle())
-                    .frame(width: 200)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
                     .cornerRadius(8)
                 }
                 .padding()
@@ -76,8 +85,8 @@ struct ContentView: View {
                     Circle()
                         .fill(dnsManager.isDNSEnabled ? Color.green : Color.gray)
                         .frame(width: 12, height: 12)
-                        .shadow(color: dnsManager.isDNSEnabled ? Color.green.opacity(0.5) : Color.gray.opacity(0.5),
-                                radius: 4, x: 0, y: 0)
+                        .shadow(color: dnsManager.isDNSEnabled ? Color.green.opacity(0.9) : Color.gray.opacity(0.8),
+                                radius: 6, x: 0, y: 0)
                     
                     Text(dnsManager.isDNSEnabled ?
                          "shecan is Active on \(dnsManager.selectedAdapter)" :
@@ -120,7 +129,10 @@ struct ContentView: View {
                 Text(dnsManager.alertMessage)
             }
         }
+        .forceLocale(dnsManager.currentLocale.identifier)
+        .environment(\.layoutDirection, dnsManager.currentLocale == .persian ? .rightToLeft : .leftToRight)
     }
+       
     
     private func pingTimeColor(_ time: String?) -> Color {
         guard let time = time else { return .white }
@@ -170,6 +182,8 @@ struct NeumorphicButtonStyle: ButtonStyle {
 
 #Preview {
     ContentView()
-        .environment(\.locale, .init(identifier: "fa"))
-        .environment(\.layoutDirection, .rightToLeft )
+        .frame(width: 320, height: 500)
+        
+//        .environment(\.locale, .init(identifier: "fa"))
+//        .environment(\.layoutDirection, .rightToLeft )
 }

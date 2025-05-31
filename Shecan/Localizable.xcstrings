@@ -4,6 +4,12 @@
     "" : {
       "shouldTranslate" : false
     },
+    "🇮🇷" : {
+
+    },
+    "🇺🇸" : {
+
+    },
     "Disable shecan" : {
       "extractionState" : "manual",
       "localizations" : {

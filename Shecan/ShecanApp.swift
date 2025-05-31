@@ -12,8 +12,10 @@ struct ShecanApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .frame(minWidth: 400, minHeight: 400)
+                .frame(width: 320, height: 500)
+                .colorScheme(.dark)
         }
+        
         .windowResizability(.contentSize)
     }
 }
