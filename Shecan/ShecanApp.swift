@@ -10,7 +10,6 @@ import SwiftUI
 @main
 struct ShecanApp: App{
     @StateObject private var dnsManager = DNSManager()
-    @State private var showWindow = false
     
     var body: some Scene {
         // Main window

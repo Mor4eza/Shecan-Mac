@@ -9,7 +9,11 @@ import SwiftUI
 import Combine
 
 class DNSManager: ObservableObject {
-    @Published var isDNSEnabled: Bool = false
+    @Published var isDNSEnabled: Bool = false {
+        didSet {
+            objectWillChange.send()
+        }
+    }
     @Published var isLoading: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
