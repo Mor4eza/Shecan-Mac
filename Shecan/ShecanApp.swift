@@ -14,30 +14,31 @@ struct ShecanApp: App{
     
     var body: some Scene {
         // Main window
-        WindowGroup {
-            ContentView()
-                .environmentObject(dnsManager)
-                .frame(width: 320, height: 520)
-                .colorScheme(.dark)
-        }
-        .windowResizability(.contentSize)
-        .commands {
-            CommandGroup(replacing: .appTermination) {
-                Button("Quit Shecan") {
-                    NSApplication.shared.terminate(nil)
-                }
-                .keyboardShortcut("q")
-            }
-        }
+//        WindowGroup {
+//            ContentView()
+//                .environmentObject(dnsManager)
+//                .frame(width: 320, height: 520)
+//                .colorScheme(.dark)
+//        }
+//        .windowResizability(.contentSize)
+//        .commands {
+//            CommandGroup(replacing: .appTermination) {
+//                Button("Quit Shecan") {
+//                    NSApplication.shared.terminate(nil)
+//                }
+//                .keyboardShortcut("q")
+//            }
+//        }
         
         // Menu bar extra
         MenuBarExtra {
-            MenuBarContentView()
+            ContentView()
+                .frame(width: 320, height: 520)
                 .environmentObject(dnsManager)
         } label: {
             Image(systemName: dnsManager.isDNSEnabled ? "network" : "network.slash")
         }
-        .menuBarExtraStyle(.menu)
+        .menuBarExtraStyle(.window)
     }
 }
 

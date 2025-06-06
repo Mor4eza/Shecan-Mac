@@ -28,6 +28,8 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding()
             
+            
+            
             VStack(spacing: 5) {
                 VStack(spacing: 1) {
                     Image(.shecan)
