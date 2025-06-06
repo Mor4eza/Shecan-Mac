@@ -8,14 +8,36 @@
 import SwiftUI
 
 @main
-struct ShecanApp: App {
+struct ShecanApp: App{
+    @StateObject private var dnsManager = DNSManager()
+    
     var body: some Scene {
-        WindowGroup {
+        // Main window
+//        WindowGroup {
+//            ContentView()
+//                .environmentObject(dnsManager)
+//                .frame(width: 320, height: 520)
+//                .colorScheme(.dark)
+//        }
+//        .windowResizability(.contentSize)
+//        .commands {
+//            CommandGroup(replacing: .appTermination) {
+//                Button("Quit Shecan") {
+//                    NSApplication.shared.terminate(nil)
+//                }
+//                .keyboardShortcut("q")
+//            }
+//        }
+        
+        // Menu bar extra
+        MenuBarExtra {
             ContentView()
                 .frame(width: 320, height: 520)
-                .colorScheme(.dark)
+                .environmentObject(dnsManager)
+        } label: {
+            Image(systemName: dnsManager.isDNSEnabled ? "network" : "network.slash")
         }
-        
-        .windowResizability(.contentSize)
+        .menuBarExtraStyle(.window)
     }
 }
+

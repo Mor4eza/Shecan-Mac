@@ -9,7 +9,11 @@ import SwiftUI
 import Combine
 
 class DNSManager: ObservableObject {
-    @Published var isDNSEnabled: Bool = false
+    @Published var isDNSEnabled: Bool = false {
+        didSet {
+            objectWillChange.send()
+        }
+    }
     @Published var isLoading: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
@@ -146,7 +150,7 @@ class DNSManager: ObservableObject {
             let process = Process()
             process.launchPath = "/bin/bash"
             process.arguments = ["-c", command]
-            
+
             do {
                 try process.run()
                 process.waitUntilExit()

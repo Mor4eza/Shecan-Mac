@@ -13,10 +13,10 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.3), Color.purple.opacity(0.3)]),
-                         startPoint: .topLeading,
-                         endPoint: .bottomTrailing)
-                .edgesIgnoringSafeArea(.all)
-           
+                           startPoint: .topLeading,
+                           endPoint: .bottomTrailing)
+            .edgesIgnoringSafeArea(.all)
+            
             Button(dnsManager.currentLocale == .english ? "🇮🇷" : "🇺🇸", action: {
                 if dnsManager.currentLocale == .english {
                     dnsManager.currentLocale = .persian
@@ -26,6 +26,15 @@ struct ContentView: View {
             })
             .toggleStyle(.button)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .padding()
+            
+            Button(action: {
+                NSApplication.shared.terminate(nil)
+            }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.white)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             .padding()
             
             VStack(spacing: 5) {
@@ -91,9 +100,9 @@ struct ContentView: View {
                     
                     Text(dnsManager.isDNSEnabled ?
                          "shecan is Active on \(dnsManager.selectedAdapter)" :
-                         "shecan is Inactive on \(dnsManager.selectedAdapter)")
-                        .font(.subheadline)
-                        .foregroundColor(.white)
+                            "shecan is Inactive on \(dnsManager.selectedAdapter)")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
                 }
                 .padding([.bottom, .top], 15)
                 
@@ -124,7 +133,7 @@ struct ContentView: View {
                     HStack(spacing: 5) {
                         Text("[Powered by Shecan](https://shecan.ir)")
                             .font(.system(.footnote, design: .monospaced))
-                           
+                        
                         
                         Image(.shecan)
                             .resizable()
@@ -147,8 +156,10 @@ struct ContentView: View {
         }
         .forceLocale(dnsManager.currentLocale.identifier)
         .environment(\.layoutDirection, dnsManager.currentLocale == .persian ? .rightToLeft : .leftToRight)
+        .onAppear {
+            dnsManager.checkDNSStatus()
+        }
     }
-       
     
     private func pingTimeColor(_ time: String?) -> Color {
         guard let time = time else { return .white }
@@ -199,7 +210,7 @@ struct NeumorphicButtonStyle: ButtonStyle {
 #Preview {
     ContentView()
         .frame(width: 320, height: 520)
-        
-//        .environment(\.locale, .init(identifier: "fa"))
-//        .environment(\.layoutDirection, .rightToLeft )
+    
+    //        .environment(\.locale, .init(identifier: "fa"))
+    //        .environment(\.layoutDirection, .rightToLeft )
 }
