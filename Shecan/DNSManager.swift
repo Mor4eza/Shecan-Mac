@@ -146,7 +146,7 @@ class DNSManager: ObservableObject {
             let process = Process()
             process.launchPath = "/bin/bash"
             process.arguments = ["-c", command]
-            
+
             do {
                 try process.run()
                 process.waitUntilExit()
